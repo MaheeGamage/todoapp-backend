@@ -2,24 +2,25 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TodoTasksService } from './todo-tasks.service';
 import { CreateTodoTaskDto } from './dto/create-todo-task.dto';
 import { UpdateTodoTaskDto } from './dto/update-todo-task.dto';
+import { Prisma } from '@prisma/client';
 
 @Controller('todo-tasks')
 export class TodoTasksController {
-  constructor(private readonly todoTasksService: TodoTasksService) {}
+  constructor(private readonly todoTasksService: TodoTasksService) { }
 
   @Post()
   create(@Body() createTodoTaskDto: CreateTodoTaskDto) {
-    return this.todoTasksService.create(createTodoTaskDto);
+    return this.todoTasksService.create(createTodoTaskDto as Prisma.TaskCreateInput);
   }
 
   @Get()
   findAll() {
-    return this.todoTasksService.findAll();
+    return this.todoTasksService.findAll({});
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.todoTasksService.findOne(+id);
+    return this.todoTasksService.findOne({id: id});
   }
 
   @Patch(':id')

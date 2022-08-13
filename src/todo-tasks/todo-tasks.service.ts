@@ -1,19 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTodoTaskDto } from './dto/create-todo-task.dto';
+import { Prisma, Task } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateTodoTaskDto } from './dto/update-todo-task.dto';
 
 @Injectable()
 export class TodoTasksService {
-  create(createTodoTaskDto: CreateTodoTaskDto) {
-    return 'This action adds a new todoTask';
+  constructor(private readonly prisma: PrismaService) { }
+
+  async create(data: Prisma.TaskCreateInput): Promise<Task> {
+    return this.prisma.task.create({ data });
   }
 
-  findAll() {
-    return `This action returns all todoTasks`;
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.TaskWhereUniqueInput;
+    where?: Prisma.TaskWhereInput;
+    orderBy?: Prisma.TaskOrderByWithRelationInput;
+  }): Promise<Task[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.task.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todoTask`;
+  async findOne(taskWhereUniqueInput: Prisma.TaskWhereUniqueInput): Promise<Task | null> {
+    return this.prisma.task.findUnique({
+      where: taskWhereUniqueInput,
+    });
   }
 
   update(id: number, updateTodoTaskDto: UpdateTodoTaskDto) {

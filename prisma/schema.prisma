@@ -1,18 +1,25 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["mongodb"]
+}
+
 model Task {
-  id    Int     @default(autoincrement()) @id
-  name  String?
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String?
   description String?
-  status
+  status  TaskStatus @default(TODO)
+}
+
+enum TaskStatus {
+  TODO
+  INPROGRESS
+  DONE
 }

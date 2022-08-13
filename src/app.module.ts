@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TodoTasksModule } from './todo-tasks/todo-tasks.module';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [TodoTasksModule],
